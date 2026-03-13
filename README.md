@@ -1,97 +1,194 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# PokeBankApp 🏦🚀
 
-# Getting Started
+## Descripción
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+Aplicación móvil de alto rendimiento desarrollada en **React Native**. Consume datos de la PokeAPI aplicando **Clean Architecture**, diseñada bajo estándares de seguridad bancaria y escalabilidad modular.
 
-## Step 1: Start Metro
+---
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 🛠 Requisitos Previos
 
-To start the Metro dev server, run the following command from the root of your React Native project:
 
-```sh
-# Using npm
-npm start
 
-# OR using Yarn
-yarn start
+**1. Instalar Java 17 vía Homebrew**
+
+**bash**
+
+```
+brew install openjdk@17
+
 ```
 
-## Step 2: Build and run your app
+Usa el código con precaución.
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+**2. Vincularlo correctamente en tu Sistema**
 
-### Android
+Ejecuta estos comandos para que tu Mac prefiera la versión 17 sobre la 19:
 
-```sh
-# Using npm
-npm run android
+**bash**
 
-# OR using Yarn
-yarn android
+```
+sudo ln -sfn $(brew --prefix openjdk@17)/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk
+
 ```
 
-### iOS
+Usa el código con precaución.
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+**3. Actualizar tu** `.zshrc` **(Configuración de Banco)**
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+Abre tu archivo: `cursor ~/.zshrc` y añade/modifica estas líneas:
 
-```sh
-bundle install
+**bash**
+
+```
+# Java Home - Forzando la versión 17 LTS
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+export PATH=$JAVA_HOME/bin:$PATH
+
 ```
 
-Then, and every time you update your native dependencies, run:
+Usa el código con precaución.
 
-```sh
-bundle exec pod install
+*Guarda y refresca:* `source ~/.zshrc`
+
+**4. Verificar**
+
+Corre `java -version`. Debe decir **17.x.x**.
+
+
+
+- **Runtime**: Node.js (Gestionado vía `fnm` recomendado).
+- **Ruby**:Instala Ruby 3.3.0 o superior. Es la versión estable actual, tiene parches de seguridad activos y compila sin errores en macOS moderno.
+
+```bash
+rbenv install 3.3.0
+rbenv global 3.3.0
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+- **Gestor de Dependencias iOS**: CocoaPods.
+  ```bash
+  sudo gem install cocoapods
+  ```
+- **Observador de Archivos**: Watchman (Crucial para el rendimiento del Metro Bundler).
+  ```bash
+  brew install watchman
+  ```
+- **Validar React Native**: Ejecuta el siguiente comando para verificar la configuración de tu entorno de desarrollo:
 
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+```bash
+    npx react-native doctor
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+---
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 🚀 Instalación y Configuración
 
-## Step 3: Modify your app
+### 1. Inicialización del Core
 
-Now that you have successfully run the app, let's make changes!
+Creamos la base del proyecto sin plantillas predefinidas para tener control total sobre las dependencias de seguridad:
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+```bash
+npx @react-native-community/cli@latest init PokeBankApp
+cd PokeBankApp
+```
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+### 2. Agregar TypeScript Manualmente
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+1. Instala TypeScript y los tipos necesarios:
 
-## Congratulations! :tada:
+```bash
+npm install --save typescript @types/react @types/react-native
+```
 
-You've successfully run and modified your React Native App. :partying_face:
+- En las arquitecturas modernas de React Native, las librerías de alto rendimiento (escritas en C++) se dividen en módulos de núcleo y módulos de funcionalidad. react-native-mmkv ahora depende de react-native-nitro-modules. Sin este puente, Gradle no puede compilar el almacenamiento seguro.
 
-### Now what?
+```bash
+npm install react-native-nitro-modules
+```
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+1. Crea un archivo `tsconfig.json` en la raíz del proyecto con el siguiente contenido:
 
-# Troubleshooting
+```bash
+{
+  "extends": "@react-native/typescript-config",
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@core/*": ["core/*"],
+      "@shared/*": ["shared/*"],
+      "@features/*": ["features/*"],
+      "@assets/*": ["assets/*"],
+      "@tests/*": ["tests/*"]
+    }
+  },
+  "include": ["src/**/*", "App.tsx"],
+  "exclude": ["node_modules"]
+}
+```
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+- Renombra tus archivos de JavaScript a TypeScript (por ejemplo, App.js a App.tsx).
 
-# Learn More
+### 3. Instalar Dependencias
 
-To learn more about React Native, take a look at the following resources:
+1. Instala las dependencias necesarias para el proyecto:
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+```bash
+`npm install axios @shopify/flash-list react-native-mmkv`
+```
+
+1. Validar React Native: Ejecuta el siguiente comando para verificar la configuración de tu entorno de desarrollo:
+
+```bash
+    npx react-native doctor
+```
+
+### 3. Ejecutar la Aplicación
+
+- Para Android:
+
+```bash
+`npx run android`
+```
+
+- Para iOS:
+
+```bash
+`npx run ios`
+```
+
+### 4. Ejecutar Pruebas
+
+Para ejecutar las pruebas unitarias, utiliza el siguiente comando:
+
+```bash
+`npm test`
+```
+
+## **Estructura del Proyecto**
+
+- **/src**: Contiene el código fuente de la aplicación.
+  - **/core**: Lógica central, interceptores y contexto.
+  - **/shared**: Componentes, modelos, utilidades y servicios reutilizables.
+  - **/features**: Características específicas de la aplicación, como la gestión de Pokémon.
+  - **/assets**: Recursos como imágenes y estilos.
+  - **/environments**: Configuraciones para diferentes entornos (desarrollo, producción, pruebas).
+  - **/tests**: Pruebas unitarias y de integración.
+
+## **Estructura de Pruebas**
+
+- **/tests**: Contiene pruebas de integración.
+- **Pruebas Unitarias**: Se recomienda colocar las pruebas unitarias junto a sus respectivos archivos de componentes o servicios para facilitar la localización.
+
+## **Enfoque**
+
+- Se utilizó una arquitectura modular para facilitar el mantenimiento y la escalabilidad.
+- Se implementó un diseño responsivo utilizando StyleSheet.
+- Se configuraron pruebas unitarias con Jest y React Native Testing Library para asegurar la funcionalidad de la aplicación.
+- Se utilizó FlashList para manejar listas grandes de manera eficiente.
+- Se implementó MMKV para un almacenamiento local eficiente.
+
+## **Notas**
+
+- Asegúrate de abrir el proyecto en Xcode usando el archivo `.xcworkspace` después de instalar CocoaPods.
+- Si tienes problemas al ejecutar la aplicación, verifica que todas las dependencias estén correctamente instaladas y que tu entorno de desarrollo esté configurado adecuadamente.
+

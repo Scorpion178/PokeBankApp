@@ -1,6 +1,8 @@
 # OSX
 #
 .DS_Store
+.bundle/
+*.log
 
 # Xcode
 #
@@ -73,3 +75,15 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# iOS
+Pods/
+build/
+*.xcworkspace/xcuserdata
+.xcode.env.local
+
+# Seguridad y Env
+.env*
+*.pem
+.npmrc
+package-lock.json
