@@ -5,34 +5,34 @@
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+  MD3LightTheme,
+  MD3DarkTheme,
+  Provider as PaperProvider,
+} from 'react-native-paper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { PokemonListScreen } from './src/features/pokemon/views/PokemonListScreen';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
+  const theme = isDarkMode ? MD3DarkTheme : MD3LightTheme;
+
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <PaperProvider theme={theme}
+        settings={{
+          // Forzamos a Paper a usar MaterialCommunityIcons
+          icon: props => <MaterialCommunityIcons {...props} />,
+        }}>
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <View style={styles.container}>
+          <PokemonListScreen />
+        </View>
+      </PaperProvider>
     </SafeAreaProvider>
-  );
-}
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
   );
 }
 

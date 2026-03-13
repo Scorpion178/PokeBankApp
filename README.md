@@ -8,8 +8,6 @@ Aplicación móvil de alto rendimiento desarrollada en **React Native**. Consume
 
 ## 🛠 Requisitos Previos
 
-
-
 **1. Instalar Java 17 vía Homebrew**
 
 **bash**
@@ -55,8 +53,6 @@ Usa el código con precaución.
 
 Corre `java -version`. Debe decir **17.x.x**.
 
-
-
 - **Runtime**: Node.js (Gestionado vía `fnm` recomendado).
 - **Ruby**:Instala Ruby 3.3.0 o superior. Es la versión estable actual, tiene parches de seguridad activos y compila sin errores en macOS moderno.
 
@@ -98,6 +94,7 @@ cd PokeBankApp
 
 ```bash
 npm install --save typescript @types/react @types/react-native
+npm install --save-dev @testing-library/react-native @testing-library/jest-native
 ```
 
 - En las arquitecturas modernas de React Native, las librerías de alto rendimiento (escritas en C++) se dividen en módulos de núcleo y módulos de funcionalidad. react-native-mmkv ahora depende de react-native-nitro-modules. Sin este puente, Gradle no puede compilar el almacenamiento seguro.
@@ -106,7 +103,17 @@ npm install --save typescript @types/react @types/react-native
 npm install react-native-nitro-modules
 ```
 
-1. Crea un archivo `tsconfig.json` en la raíz del proyecto con el siguiente contenido:
+- Instalar react Native Paper
+
+```bash
+npm install react-native-paper
+npm install react-native-safe-area-context
+npx pod-install
+npm install @react-native-vector-icons/material-design-icons
+npm install react-native-vector-icons
+```
+
+2. Crea un archivo `tsconfig.json` en la raíz del proyecto con el siguiente contenido:
 
 ```bash
 {
@@ -128,6 +135,56 @@ npm install react-native-nitro-modules
 
 - Renombra tus archivos de JavaScript a TypeScript (por ejemplo, App.js a App.tsx).
 
+3. Configurar Babel:
+- Instala el plugin:
+```bash
+npm install --save-dev babel-plugin-module-resolver
+```
+- Edita babel.config.js para añadir el plugin y los alias:
+```bash
+module.exports = {
+  presets: ['module:@react-native/babel-preset'],
+  plugins: [
+    [
+      'module-resolver',
+      {
+        root: ['./src'],
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+        alias: {
+          '@core': './src/core',
+          '@shared': './src/shared',
+          '@features': './src/features',
+          '@assets': './src/assets',
+          '@tests': './src/tests',
+        },
+      },
+    ],
+  ],
+};
+```
+
+4. Configurar Metro (para que el bundler resuelva los alias)
+- Edita metro.config.js:
+```bash
+const path = require('path');
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+
+const config = {
+  resolver: {
+    alias: {
+      '@core': path.resolve(__dirname, 'src/core'),
+      '@shared': path.resolve(__dirname, 'src/shared'),
+      '@features': path.resolve(__dirname, 'src/features'),
+      '@assets': path.resolve(__dirname, 'src/assets'),
+      '@tests': path.resolve(__dirname, 'src/tests'),
+    },
+  },
+};
+
+module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+```
+
+
 ### 3. Instalar Dependencias
 
 1. Instala las dependencias necesarias para el proyecto:
@@ -142,7 +199,7 @@ npm install react-native-nitro-modules
     npx react-native doctor
 ```
 
-### 3. Ejecutar la Aplicación
+### 4. Ejecutar la Aplicación
 
 - Para Android:
 
@@ -156,36 +213,36 @@ npm install react-native-nitro-modules
 `npx run ios`
 ```
 
-### 4. Ejecutar Pruebas
+### 5. Ejecutar Pruebas
 
-Para ejecutar las pruebas unitarias, utiliza el siguiente comando:
+Para ejecutar las pruebas unitarias y de integración, utiliza el siguiente comando:
 
 ```bash
-`npm test`
+npm test
 ```
 
 ## **Estructura del Proyecto**
 
 - **/src**: Contiene el código fuente de la aplicación.
-  - **/core**: Lógica central, interceptores y contexto.
+  - **/core**: Lógica central, cliente HTTP (`PokeAPI`), MMKV y contexto.
   - **/shared**: Componentes, modelos, utilidades y servicios reutilizables.
-  - **/features**: Características específicas de la aplicación, como la gestión de Pokémon.
+  - **/features**: Características específicas de la aplicación.
+    - **/pokemon**: Pantalla de listado de Pokémon, componentes y servicios.
   - **/assets**: Recursos como imágenes y estilos.
-  - **/environments**: Configuraciones para diferentes entornos (desarrollo, producción, pruebas).
-  - **/tests**: Pruebas unitarias y de integración.
+  - **/tests**: Pruebas de integración de alto nivel.
 
 ## **Estructura de Pruebas**
 
-- **/tests**: Contiene pruebas de integración.
-- **Pruebas Unitarias**: Se recomienda colocar las pruebas unitarias junto a sus respectivos archivos de componentes o servicios para facilitar la localización.
+- **/tests**: Contiene pruebas de integración (por ejemplo, pruebas de la app completa).
+- **Pruebas Unitarias**: Se colocan junto a sus respectivos archivos de componentes o servicios (por ejemplo, `PokemonListScreen.test.tsx` junto a `PokemonListScreen.tsx`).
 
 ## **Enfoque**
 
 - Se utilizó una arquitectura modular para facilitar el mantenimiento y la escalabilidad.
-- Se implementó un diseño responsivo utilizando StyleSheet.
-- Se configuraron pruebas unitarias con Jest y React Native Testing Library para asegurar la funcionalidad de la aplicación.
-- Se utilizó FlashList para manejar listas grandes de manera eficiente.
-- Se implementó MMKV para un almacenamiento local eficiente.
+- Se implementó una pantalla principal de Pokémon usando **FlashList** para manejar listas grandes.
+- Se implementó un diseño responsivo utilizando **React Native Paper** y `StyleSheet`.
+- Se configuraron pruebas unitarias con **Jest** y **React Native Testing Library** para asegurar la funcionalidad de la aplicación.
+- Se implementó **MMKV** para un almacenamiento local eficiente de la lista de Pokémon.
 
 ## **Notas**
 
