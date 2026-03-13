@@ -1,6 +1,6 @@
 import { pokeApiClient, mapApiError } from '@core/api/httpClient';
 import { getJson, saveJson } from '@core/storage/mmkv';
-import type { PokemonDetail } from '../types';
+import type { PokemonDetail } from '@shared/types/poke-types';
 
 const POKEMON_CACHE_KEY = 'pokemon:list:v1';
 

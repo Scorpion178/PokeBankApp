@@ -12,7 +12,7 @@ import {
 import { PokemonCard } from '../components/PokemonCard';
 import { PokemonDetailModal } from '../components/PokemonDetailModal';
 import { fetchPokemonList, getCachedPokemonList } from '../services/pokemonService';
-import type { PokemonDetail } from '../types';
+import type { PokemonDetail } from '@shared/types/poke-types';
 
 export const PokemonListScreen: React.FC = () => {
   const insets = useSafeAreaInsets();

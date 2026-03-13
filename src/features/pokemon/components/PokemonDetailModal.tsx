@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { Modal, Portal, Text, useTheme, Button } from 'react-native-paper';
-import type { PokemonDetail } from '../types';
+import type { PokemonDetail } from '@shared/types/poke-types';
 
 interface Props {
   visible: boolean;
