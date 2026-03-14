@@ -17,7 +17,7 @@ brew install openjdk@17
 
 ```
 
-Usa el código con precaución.
+
 
 **2. Vincularlo correctamente en tu Sistema**
 
@@ -30,7 +30,7 @@ sudo ln -sfn $(brew --prefix openjdk@17)/libexec/openjdk.jdk /Library/Java/JavaV
 
 ```
 
-Usa el código con precaución.
+
 
 **3. Actualizar tu** `.zshrc` **(Configuración de Banco)**
 
@@ -45,7 +45,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 ```
 
-Usa el código con precaución.
+
 
 *Guarda y refresca:* `source ~/.zshrc`
 
@@ -113,7 +113,7 @@ npm install @react-native-vector-icons/material-design-icons
 npm install react-native-vector-icons
 ```
 
-2. Crea un archivo `tsconfig.json` en la raíz del proyecto con el siguiente contenido:
+1. Crea un archivo `tsconfig.json` en la raíz del proyecto con el siguiente contenido:
 
 ```bash
 {
@@ -135,12 +135,16 @@ npm install react-native-vector-icons
 
 - Renombra tus archivos de JavaScript a TypeScript (por ejemplo, App.js a App.tsx).
 
-3. Configurar Babel:
+1. Configurar Babel:
+
 - Instala el plugin:
+
 ```bash
 npm install --save-dev babel-plugin-module-resolver
 ```
+
 - Edita babel.config.js para añadir el plugin y los alias:
+
 ```bash
 module.exports = {
   presets: ['module:@react-native/babel-preset'],
@@ -163,8 +167,10 @@ module.exports = {
 };
 ```
 
-4. Configurar Metro (para que el bundler resuelva los alias)
+1. Configurar Metro (para que el bundler resuelva los alias)
+
 - Edita metro.config.js:
+
 ```bash
 const path = require('path');
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
@@ -183,7 +189,6 @@ const config = {
 
 module.exports = mergeConfig(getDefaultConfig(__dirname), config);
 ```
-
 
 ### 3. Instalar Dependencias
 
@@ -240,7 +245,7 @@ npm test
 
 - Se utilizó una arquitectura modular para facilitar el mantenimiento y la escalabilidad.
 - Se implementó una pantalla principal de Pokémon usando **FlashList** para manejar listas grandes.
-- Se implementó un diseño responsivo utilizando **React Native Paper** y `StyleSheet`.
+- Se implementó un diseño responsivo utilizando **React Native Paper** (Sus componentes considera accesibilidad) y `StyleSheet`.
 - Se configuraron pruebas unitarias con **Jest** y **React Native Testing Library** para asegurar la funcionalidad de la aplicación.
 - Se implementó **MMKV** para un almacenamiento local eficiente de la lista de Pokémon.
 
